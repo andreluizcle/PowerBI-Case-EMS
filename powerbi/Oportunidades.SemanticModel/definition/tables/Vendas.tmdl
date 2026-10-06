@@ -1,0 +1,171 @@
+table Vendas
+	lineageTag: 12bac809-b033-4a9b-8d5b-907ccbde945e
+
+	/// Receita total em R$ milhões (a coluna Receita está em R$ mil).
+	measure 'Receita (R$ mi)' = SUM(Vendas[Receita (R$ mil)]) / 1000
+		formatString: #,0.0
+		lineageTag: 8106ddf0-984b-47ec-a62c-b2a77db4c6ad
+
+	/// Unidades vendidas em milhões (a coluna Unidades está em mil).
+	measure 'Volume (mi un.)' = SUM(Vendas[Unidades (mil)]) / 1000
+		formatString: #,0.0
+		lineageTag: f8c82934-17e0-470d-8d78-3b0c9fa7eb9d
+
+	/// Preço médio ponderado = receita ÷ volume. Nunca a média simples da coluna de preço.
+	measure 'Preço Médio (R$)' = DIVIDE([Receita (R$ mi)], [Volume (mi un.)])
+		formatString: #,0.00
+		lineageTag: c6ecda90-abcf-49be-b8a0-b8a7b304d6f3
+
+	column Região
+		dataType: string
+		lineageTag: dbe7f620-70fd-47ec-a04c-1e02d14b112d
+		summarizeBy: none
+		sourceColumn: Região
+
+		annotation SummarizationSetBy = User
+
+	column Estado
+		dataType: string
+		lineageTag: 00f5c876-87e7-4374-9e2d-e2217a5711e7
+		summarizeBy: none
+		sourceColumn: Estado
+
+		annotation SummarizationSetBy = User
+
+	column Canal
+		dataType: string
+		lineageTag: 5b382cc9-038f-447c-87ec-073915acc205
+		summarizeBy: none
+		sourceColumn: Canal
+
+		annotation SummarizationSetBy = User
+
+	column 'Unidades (mil)'
+		dataType: int64
+		formatString: #,0
+		lineageTag: 163e147c-a947-441e-9ed8-ca067dedea3c
+		summarizeBy: sum
+		sourceColumn: Unidades (mil)
+
+		annotation SummarizationSetBy = User
+
+	/// Preço médio por unidade de cada linha (UF × canal). Não somar nem tirar média simples: use a medida Preço Médio (R$).
+	column 'Preço médio por unidade (R$)'
+		dataType: double
+		formatString: #,0.00
+		lineageTag: a1fd5c6a-b2c3-4509-ab40-cf19d53b58ef
+		summarizeBy: none
+		sourceColumn: Preço médio por unidade (R$)
+
+		annotation SummarizationSetBy = User
+
+	/// Receita da linha em R$ mil = Unidades (mil) × Preço médio por unidade (R$).
+	column 'Receita (R$ mil)'
+		dataType: double
+		formatString: #,0.00
+		lineageTag: 653d5f2a-57cd-47e6-9ee6-301dc229e652
+		summarizeBy: sum
+		sourceColumn: Receita (R$ mil)
+
+		annotation SummarizationSetBy = User
+
+	/// Rótulo da combinação, ex.: "SC - Varejo".
+	column 'Estado - Canal'
+		dataType: string
+		lineageTag: 526d05c8-18cb-4b9b-97c4-0df34941214b
+		summarizeBy: none
+		sourceColumn: Estado - Canal
+
+		annotation SummarizationSetBy = User
+
+	partition Vendas = m
+		mode: import
+		source =
+				let
+				    // 75 registros copiados de "Dados - Negócios.xlsx" (preço arredondado a 2 casas)
+				    Fonte = #table(
+				        type table [#"Região" = text, Estado = text, Canal = text, #"Unidades (mil)" = Int64.Type, #"Preço médio por unidade (R$)" = number],
+				        {
+				            {"Sudeste", "SP", "Varejo", 3274, 5.24},
+				            {"Sudeste", "SP", "Hospitalar", 1394, 5.15},
+				            {"Sudeste", "SP", "Institucional", 3192, 4.40},
+				            {"Sudeste", "RJ", "Varejo", 566, 4.33},
+				            {"Sudeste", "RJ", "Hospitalar", 1582, 5.33},
+				            {"Sudeste", "RJ", "Institucional", 3271, 4.39},
+				            {"Sudeste", "MG", "Varejo", 230, 4.23},
+				            {"Sudeste", "MG", "Hospitalar", 869, 5.14},
+				            {"Sudeste", "MG", "Institucional", 2953, 4.20},
+				            {"Sudeste", "ES", "Varejo", 1055, 4.44},
+				            {"Sudeste", "ES", "Hospitalar", 559, 5.00},
+				            {"Sudeste", "ES", "Institucional", 2400, 4.76},
+				            {"Sul", "PR", "Varejo", 574, 5.00},
+				            {"Sul", "PR", "Hospitalar", 2147, 4.58},
+				            {"Sul", "PR", "Institucional", 1075, 4.50},
+				            {"Sul", "RS", "Varejo", 3105, 5.22},
+				            {"Sul", "RS", "Hospitalar", 662, 4.70},
+				            {"Sul", "RS", "Institucional", 1367, 4.97},
+				            {"Sul", "SC", "Varejo", 3302, 5.32},
+				            {"Sul", "SC", "Hospitalar", 746, 4.42},
+				            {"Sul", "SC", "Institucional", 2314, 4.22},
+				            {"Centro-Oeste", "DF", "Varejo", 700, 5.46},
+				            {"Centro-Oeste", "DF", "Hospitalar", 341, 4.70},
+				            {"Centro-Oeste", "DF", "Institucional", 2712, 4.50},
+				            {"Centro-Oeste", "GO", "Varejo", 2239, 4.77},
+				            {"Centro-Oeste", "GO", "Hospitalar", 1578, 4.99},
+				            {"Centro-Oeste", "GO", "Institucional", 875, 4.24},
+				            {"Centro-Oeste", "MT", "Varejo", 2353, 4.71},
+				            {"Centro-Oeste", "MT", "Hospitalar", 1685, 5.06},
+				            {"Centro-Oeste", "MT", "Institucional", 3173, 4.75},
+				            {"Centro-Oeste", "MS", "Varejo", 2713, 4.91},
+				            {"Centro-Oeste", "MS", "Hospitalar", 1600, 5.46},
+				            {"Centro-Oeste", "MS", "Institucional", 2877, 4.78},
+				            {"Nordeste", "BA", "Varejo", 301, 5.36},
+				            {"Nordeste", "BA", "Hospitalar", 2417, 5.15},
+				            {"Nordeste", "BA", "Institucional", 3442, 4.32},
+				            {"Nordeste", "PE", "Varejo", 1375, 4.26},
+				            {"Nordeste", "PE", "Hospitalar", 2443, 5.30},
+				            {"Nordeste", "PE", "Institucional", 437, 4.90},
+				            {"Nordeste", "CE", "Varejo", 891, 4.66},
+				            {"Nordeste", "CE", "Hospitalar", 863, 4.99},
+				            {"Nordeste", "CE", "Institucional", 592, 4.38},
+				            {"Nordeste", "RN", "Varejo", 2162, 4.41},
+				            {"Nordeste", "RN", "Hospitalar", 2668, 5.20},
+				            {"Nordeste", "RN", "Institucional", 2127, 4.58},
+				            {"Nordeste", "PB", "Varejo", 3234, 5.26},
+				            {"Nordeste", "PB", "Hospitalar", 2740, 5.12},
+				            {"Nordeste", "PB", "Institucional", 518, 5.20},
+				            {"Nordeste", "AL", "Varejo", 1896, 5.40},
+				            {"Nordeste", "AL", "Hospitalar", 3165, 4.35},
+				            {"Nordeste", "AL", "Institucional", 2282, 5.31},
+				            {"Nordeste", "MA", "Varejo", 879, 4.63},
+				            {"Nordeste", "MA", "Hospitalar", 3219, 4.68},
+				            {"Nordeste", "MA", "Institucional", 1851, 5.07},
+				            {"Nordeste", "SE", "Varejo", 2831, 5.03},
+				            {"Nordeste", "SE", "Hospitalar", 1670, 4.81},
+				            {"Nordeste", "SE", "Institucional", 2760, 5.46},
+				            {"Norte", "PA", "Varejo", 2790, 5.19},
+				            {"Norte", "PA", "Hospitalar", 3389, 4.51},
+				            {"Norte", "PA", "Institucional", 497, 4.84},
+				            {"Norte", "AM", "Varejo", 492, 5.12},
+				            {"Norte", "AM", "Hospitalar", 1981, 4.23},
+				            {"Norte", "AM", "Institucional", 1584, 4.46},
+				            {"Norte", "RO", "Varejo", 963, 5.03},
+				            {"Norte", "RO", "Hospitalar", 663, 4.93},
+				            {"Norte", "RO", "Institucional", 2023, 5.38},
+				            {"Norte", "AC", "Varejo", 2378, 4.73},
+				            {"Norte", "AC", "Hospitalar", 3342, 4.46},
+				            {"Norte", "AC", "Institucional", 2672, 4.30},
+				            {"Norte", "RR", "Varejo", 1822, 5.10},
+				            {"Norte", "RR", "Hospitalar", 1919, 5.41},
+				            {"Norte", "RR", "Institucional", 2704, 4.58},
+				            {"Norte", "AP", "Varejo", 3160, 5.33},
+				            {"Norte", "AP", "Hospitalar", 1151, 4.48},
+				            {"Norte", "AP", "Institucional", 1463, 5.36}
+				        }
+				    ),
+				    // Receita (R$ mil) = Unidades (mil) × Preço (R$); arredondada a centavos só para tirar ruído de ponto flutuante
+				    Receita = Table.AddColumn(Fonte, "Receita (R$ mil)", each Number.Round([#"Unidades (mil)"] * [#"Preço médio por unidade (R$)"], 2), type number),
+				    EstadoCanal = Table.AddColumn(Receita, "Estado - Canal", each [Estado] & " - " & [Canal], type text)
+				in
+				    EstadoCanal
+

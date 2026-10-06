@@ -1,0 +1,37 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "04_card_receita",
+  "position": {
+    "x": 20,
+    "y": 80,
+    "z": 4000,
+    "height": 84,
+    "width": 190,
+    "tabOrder": 4000
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Vendas"
+                    }
+                  },
+                  "Property": "Receita (R$ mi)"
+                }
+              },
+              "queryRef": "Vendas.Receita (R$ mi)",
+              "nativeQueryRef": "Receita (R$ mi)"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

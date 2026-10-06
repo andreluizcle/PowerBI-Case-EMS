@@ -1,0 +1,37 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "06_card_preco",
+  "position": {
+    "x": 420,
+    "y": 80,
+    "z": 6000,
+    "height": 84,
+    "width": 190,
+    "tabOrder": 6000
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Vendas"
+                    }
+                  },
+                  "Property": "Preço Médio (R$)"
+                }
+              },
+              "queryRef": "Vendas.Preço Médio (R$)",
+              "nativeQueryRef": "Preço Médio (R$)"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
