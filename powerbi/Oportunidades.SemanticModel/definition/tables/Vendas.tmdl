@@ -16,6 +16,59 @@ table Vendas
 		formatString: #,0.00
 		lineageTag: c6ecda90-abcf-49be-b8a0-b8a7b304d6f3
 
+	/// Premissa: preço do genérico = 65% do preço atual (teto Anvisa/CMED: ao menos 35% abaixo do referência).
+	measure 'Fator Preço Genérico' = 0.65
+		formatString: 0%
+
+	/// Premissa: margem bruta de 30% no preço-teto (dado do case).
+	measure 'Margem Genérico' = 0.30
+		formatString: 0%
+
+	measure 'Mercado atual (R$ mi)' = [Receita (R$ mi)]
+		formatString: #,0.0
+
+	measure 'Mercado a preço de genérico (R$ mi)' = [Receita (R$ mi)] * [Fator Preço Genérico]
+		formatString: #,0.0
+
+	measure 'Share Base' = CALCULATE(MAX(Cenarios[Share total]), Cenarios[Cenário] = "Base")
+		formatString: 0.0%
+
+	measure 'Receita EMS (R$ mi)' = [Mercado a preço de genérico (R$ mi)] * [Share Base]
+		formatString: #,0.0
+
+	measure 'Lucro bruto EMS (R$ mi)' = [Receita EMS (R$ mi)] * [Margem Genérico]
+		formatString: #,0.0
+
+	measure 'Share do cenário' = SELECTEDVALUE(Cenarios[Share total])
+		formatString: 0.0%
+
+	measure 'Unidades EMS no cenário (mi)' = [Volume (mi un.)] * [Share do cenário]
+		formatString: #,0.0
+
+	measure 'Receita EMS no cenário (R$ mi)' = [Mercado a preço de genérico (R$ mi)] * [Share do cenário]
+		formatString: #,0.0
+
+	measure 'Lucro bruto no cenário (R$ mi)' = [Receita EMS no cenário (R$ mi)] * [Margem Genérico]
+		formatString: #,0.0
+
+	measure 'Custo unitário (R$)' = [Preço Médio (R$)] * [Fator Preço Genérico] * (1 - [Margem Genérico])
+		formatString: #,0.00
+
+	measure 'Preço do genérico no desconto (R$)' = [Preço Médio (R$)] * (1 - SELECTEDVALUE(Descontos[Desconto]))
+		formatString: #,0.00
+
+	measure 'Lucro por unidade no desconto (R$)' = [Preço do genérico no desconto (R$)] - [Custo unitário (R$)]
+		formatString: #,0.00
+
+	measure 'Share Conservador' = CALCULATE(MAX(Cenarios[Share total]), Cenarios[Cenário] = "Conservador")
+		formatString: 0.0%
+
+	measure 'Receita EMS conservador (R$ mi)' = [Mercado a preço de genérico (R$ mi)] * [Share Conservador]
+		formatString: #,0.0
+
+	measure 'Lucro bruto EMS conservador (R$ mi)' = [Receita EMS conservador (R$ mi)] * [Margem Genérico]
+		formatString: #,0.0
+
 	column Região
 		dataType: string
 		lineageTag: dbe7f620-70fd-47ec-a04c-1e02d14b112d

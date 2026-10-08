@@ -1,0 +1,33 @@
+/// Níveis de desconto sobre o preço atual (35% é o mínimo exigido para genérico). Tabela desconectada.
+table Descontos
+
+	column Desconto
+		dataType: double
+		formatString: 0%
+		summarizeBy: none
+		sourceColumn: Desconto
+
+		annotation SummarizationSetBy = User
+
+	column Rótulo
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Rótulo
+		sortByColumn: Desconto
+
+		annotation SummarizationSetBy = User
+
+	partition Descontos = m
+		mode: import
+		source =
+				let
+				    Fonte = #table(
+				        type table [Desconto = number, #"Rótulo" = text],
+				        {
+				            {0.35, "35% (teto)"},
+				            {0.40, "40%"},
+				            {0.45, "45%"}
+				        }
+				    )
+				in
+				    Fonte

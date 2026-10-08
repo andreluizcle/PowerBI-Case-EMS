@@ -1,0 +1,59 @@
+/// Cenários de share (hipóteses do case). Tabela desconectada: não filtra Vendas.
+table Cenarios
+
+	column Cenário
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Cenário
+		sortByColumn: Ordem
+
+		annotation SummarizationSetBy = User
+
+	column Ordem
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: Ordem
+
+		annotation SummarizationSetBy = User
+
+	/// Quanto os genéricos levam do volume da molécula (hipótese).
+	column 'Penetração dos genéricos'
+		dataType: double
+		formatString: 0.0%
+		summarizeBy: none
+		sourceColumn: Penetração dos genéricos
+
+		annotation SummarizationSetBy = User
+
+	/// Participação da EMS entre os genéricos (23% hoje, segundo a imprensa; 30% é hipótese).
+	column 'Participação da EMS entre os genéricos'
+		dataType: double
+		formatString: 0.0%
+		summarizeBy: none
+		sourceColumn: Participação da EMS entre os genéricos
+
+		annotation SummarizationSetBy = User
+
+	/// Share da EMS no volume total = penetração × participação.
+	column 'Share total' = Cenarios[Penetração dos genéricos] * Cenarios[Participação da EMS entre os genéricos]
+		dataType: double
+		formatString: 0.0%
+		summarizeBy: none
+
+		annotation SummarizationSetBy = User
+
+	partition Cenarios = m
+		mode: import
+		source =
+				let
+				    Fonte = #table(
+				        type table [#"Cenário" = text, Ordem = Int64.Type, #"Penetração dos genéricos" = number, #"Participação da EMS entre os genéricos" = number],
+				        {
+				            {"Conservador", 1, 0.40, 0.23},
+				            {"Base", 2, 0.50, 0.23},
+				            {"Com foco no Nordeste", 3, 0.50, 0.30}
+				        }
+				    )
+				in
+				    Fonte

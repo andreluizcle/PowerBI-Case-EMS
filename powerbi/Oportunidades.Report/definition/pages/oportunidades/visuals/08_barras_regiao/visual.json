@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "08_barras_regiao",
   "position": {
     "x": 626,
@@ -27,8 +27,7 @@
                 }
               },
               "queryRef": "Vendas.Região",
-              "nativeQueryRef": "Região",
-              "active": true
+              "nativeQueryRef": "Região"
             }
           ]
         },
@@ -66,7 +65,8 @@
             },
             "direction": "Descending"
           }
-        ]
+        ],
+        "isDefaultSort": false
       }
     },
     "objects": {

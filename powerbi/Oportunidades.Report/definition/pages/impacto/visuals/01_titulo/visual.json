@@ -6,7 +6,7 @@
     "y": 14,
     "z": 1000,
     "height": 52,
-    "width": 720,
+    "width": 1000,
     "tabOrder": 1000
   },
   "visual": {
@@ -19,10 +19,10 @@
               {
                 "textRuns": [
                   {
-                    "value": "Lançamento do genérico: onde está a oportunidade?",
+                    "value": "Impacto esperado: Nordeste, todos os canais",
                     "textStyle": {
                       "fontWeight": "bold",
-                      "fontSize": "20pt"
+                      "fontSize": "22pt"
                     }
                   }
                 ]
