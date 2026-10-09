@@ -239,19 +239,7 @@ A compra da Medley, que somaria cerca de 7 a 8 pontos percentuais à EMS, depend
 - Os dados não reproduzem integralmente a descrição do enunciado: o Sudeste é a 4ª região em receita (R$ 100,4 mi), e o varejo representa cerca de um terço do total.
 - A diferença de preço entre canais (cerca de 7%) é um fato da base, mas não é estatisticamente firme com 25 observações por canal.
 
-## 8. Estrutura do repositório
-
-```
-.
-├── README.md
-├── prints/        # imagens usadas neste README
-├── powerbi/       # projeto do dashboard (PBIP): páginas "Oportunidades" e "Impacto"
-└── dados/         # base original e base tratada (Base_PowerBI_Case.xlsx)
-
-(Ajuste os nomes das pastas `powerbi/` e `dados/` se o seu repositório usar outros.)
-```
-
-## 9. Fontes
+## 8. Fontes
 
 - Exame INSIGHT, 12/08/2026: [Sem remédios: Grupo EMS espera aval do Cade em setembro para aquisição da Medley](https://exame.com/insight/sem-remedios-grupo-ems-espera-aval-do-cade-em-setembro-para-aquisicao-da-medley/p). Base dos números de participação da EMS (cerca de 23% dos genéricos) e de participação dos genéricos (mais de 40% das unidades comercializadas).
 - Regras regulatórias: Lei nº 9.787/1999 (Lei dos Genéricos), normas da CMED sobre o preço do genérico e RDC nº 96/2008 da Anvisa (propaganda de medicamentos). Consulte o texto oficial vigente ao citá-las.
